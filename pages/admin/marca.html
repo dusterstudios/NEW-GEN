@@ -1,0 +1,13 @@
+<header class="admin-head">
+  <p class="metric-label">Configuração</p>
+  <h1>Minha marca</h1>
+  <p>Identidade e metadados da marca à qual sua conta pertence.</p>
+</header>
+
+<div id="marca-erro" class="admin-error" hidden></div>
+<form class="admin-form" id="marca-form">
+  <div class="row"><label>Identificador</label><input id="mk-id" disabled /></div>
+  <div class="row"><label for="mk-nome">Nome</label><input id="mk-nome" maxlength="120" /></div>
+  <div class="row"><label>Status</label><input id="mk-status" disabled /></div>
+  <button class="btn btn-primary" type="submit" data-require-perm="marca.editar" hidden>Salvar</button>
+</form>

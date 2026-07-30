@@ -1,0 +1,16 @@
+<header class="admin-head">
+  <p class="metric-label">Visão geral</p>
+  <h1>Dashboard</h1>
+  <p>Todos os números abaixo são restritos à sua marca.</p>
+</header>
+
+<div class="admin-grid" id="dashboard-cards">
+  <div class="admin-card"><div class="metric" data-bind="total_personagens">—</div><div class="metric-label">Personagens</div></div>
+  <div class="admin-card"><div class="metric" data-bind="total_admins">—</div><div class="metric-label">Administradores</div></div>
+  <div class="admin-card"><div class="metric" data-bind="admins_ativos">—</div><div class="metric-label">Admins ativos</div></div>
+</div>
+
+<section style="margin-top:32px;">
+  <h2 style="font-size:19px;">Atividade recente</h2>
+  <div id="dashboard-audit"><p class="admin-empty">Carregando…</p></div>
+</section>

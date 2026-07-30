@@ -1,0 +1,24 @@
+<div class="admin-login-wrap">
+  <div class="admin-login-card">
+    <p class="metric-label">NEW GEN</p>
+    <h1 style="margin:6px 0 4px;font-size:26px;">Painel Administrativo</h1>
+    <p style="color:var(--lavender);font-size:13.5px;margin:0 0 18px;">
+      Acesso restrito. Sua marca é determinada pela sua conta.
+    </p>
+
+    <div id="admin-login-error" class="admin-error" hidden></div>
+
+    <form class="admin-form" id="admin-login-form">
+      <div class="row">
+        <label for="admin-email">E-mail</label>
+        <input id="admin-email" type="email" autocomplete="email" required />
+      </div>
+      <div class="row">
+        <label for="admin-senha">Senha</label>
+        <input id="admin-senha" type="password" autocomplete="current-password" required />
+      </div>
+      <button class="btn btn-primary" type="submit" id="admin-login-btn">Entrar</button>
+      <button class="btn btn-ghost" type="button" id="admin-login-google">Entrar com Google</button>
+    </form>
+  </div>
+</div>

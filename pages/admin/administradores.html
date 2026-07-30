@@ -1,0 +1,21 @@
+<header class="admin-head">
+  <p class="metric-label">Equipe</p>
+  <h1>Administradores</h1>
+  <p>Contas individuais. Todo admin criado aqui pertence permanentemente à sua marca.</p>
+</header>
+
+<div id="admins-erro" class="admin-error" hidden></div>
+
+<section data-require-perm="admin.criar" hidden style="margin-bottom:26px;">
+  <h2 style="font-size:18px;">Novo administrador</h2>
+  <form class="admin-form" id="admin-novo-form">
+    <div class="row"><label for="na-nome">Nome</label><input id="na-nome" required maxlength="120" /></div>
+    <div class="row"><label for="na-email">E-mail</label><input id="na-email" type="email" required /></div>
+    <div class="row"><label for="na-senha">Senha inicial (mín. 6)</label><input id="na-senha" type="password" minlength="6" /></div>
+    <div class="row"><label for="na-role">Cargo</label><select id="na-role"></select></div>
+    <div class="row"><label for="na-obs">Observações</label><textarea id="na-obs" rows="2" maxlength="500"></textarea></div>
+    <button class="btn btn-primary" type="submit">Criar administrador</button>
+  </form>
+</section>
+
+<div id="admins-lista"><p class="admin-empty">Carregando…</p></div>

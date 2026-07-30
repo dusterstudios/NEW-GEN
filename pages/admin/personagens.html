@@ -1,0 +1,13 @@
+<header class="admin-head">
+  <p class="metric-label">Conteúdo</p>
+  <h1>Personagens</h1>
+  <p>Somente personagens da sua marca são exibidos e editáveis.</p>
+</header>
+
+<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+  <input id="pj-busca" class="admin-form" placeholder="Buscar por nome…"
+         style="max-width:280px;padding:10px 12px;border-radius:9px;border:1px solid var(--line);background:rgba(255,255,255,.02);color:var(--ivory);" />
+  <button class="btn btn-primary" id="pj-novo" data-require-perm="personagem.criar" hidden>Novo personagem</button>
+</div>
+
+<div id="pj-lista"><p class="admin-empty">Carregando…</p></div>

@@ -1,0 +1,145 @@
+<section id="ficha" class="section" data-page="ficha">
+  <span class="page-eyebrow">Capítulo 04 - Área do Jogador</span>
+  <h2>Ficha de Personagem</h2>
+
+  <p class="section-intro">
+    Gerencie até 5 slots de personagens. Suas alterações são salvas automaticamente.
+    Selecione um slot para criar, editar ou visualizar a ficha completa.
+  </p>
+
+  <!-- GRID DE SLOTS (1 a 5) -->
+  <div id="ficha-slots-container" class="slots-grid" style="margin-top: 24px;">
+    <!-- Renderizado dinamicamente pelo app.js -->
+  </div>
+
+  <!-- EDITOR / MODAL DA FICHA -->
+  <div id="character-editor" class="editor-overlay" style="display: none;">
+    <div class="editor-card">
+      <div class="editor-header">
+        <h3 id="editor-title">Editar Personagem - Slot 1</h3>
+        <button id="close-editor-btn" class="close-btn" type="button">&times;</button>
+      </div>
+
+      <form id="character-form" class="editor-form" onsubmit="event.preventDefault();">
+        <input type="hidden" id="char-slot-index" value="0" />
+
+        <!-- CAMPOS DIGITADOS -->
+        <fieldset class="form-group-section">
+          <legend>Informações Gerais</legend>
+          <div class="form-grid">
+            <div class="field">
+              <label for="char-nome">Nome *</label>
+              <input type="text" id="char-nome" placeholder="Ex: Monkey D. Luffy" required />
+            </div>
+            <div class="field">
+              <label for="char-idade">Idade *</label>
+              <input type="text" id="char-idade" placeholder="Ex: 19 anos" required />
+            </div>
+            <div class="field">
+              <label for="char-genero">Gênero *</label>
+              <input type="text" id="char-genero" placeholder="Ex: Masculino" required />
+            </div>
+            <div class="field">
+              <label for="char-recompensa">Recompensa *</label>
+              <input type="text" id="char-recompensa" placeholder="Ex: B$ 3.000.000.000" required />
+            </div>
+          </div>
+
+          <div class="field style-full" style="margin-top:12px;">
+            <label for="char-historia">História *</label>
+            <textarea id="char-historia" rows="4" placeholder="Escreva o passado e conquistas do personagem..." required></textarea>
+          </div>
+
+          <div class="field style-full" style="margin-top:12px;">
+            <label for="char-personalidade">Personalidade *</label>
+            <textarea id="char-personalidade" rows="3" placeholder="Descreva traços marcantes, ambições e comportamento..." required></textarea>
+          </div>
+        </fieldset>
+
+        <!-- CAMPOS SELECIONADOS (ATIVOS) -->
+        <fieldset class="form-group-section" style="margin-top:16px;">
+          <legend>Origem & Habilidades Ativas</legend>
+          <div class="form-grid">
+            <div class="field">
+              <label for="char-raca">Raça *</label>
+              <select id="char-raca" required>
+                <option value="">Selecione uma raça...</option>
+                <!-- Raças Padrão -->
+                <option value="Humanos">Humanos</option>
+                <option value="Homens-Peixe">Homens-Peixe</option>
+                <option value="Tritão/Sereia">Tritão/Sereia</option>
+                <option value="Kujas">Kujas</option>
+                <option value="Bucaneiros">Bucaneiros</option>
+                <option value="Mink's">Mink's</option>
+                <option value="Gigantes">Gigantes</option>
+                <option value="Onis">Onis</option>
+                <!-- Raças Premium (Marcadas) -->
+                <option value="Celestiais [PREMIUM]" data-premium="true">Celestiais ⭐ [PREMIUM]</option>
+                <option value="Seraphins [PREMIUM]" data-premium="true">Seraphins ⭐ [PREMIUM]</option>
+                <option value="Ghoul [PREMIUM]" data-premium="true">Ghoul ⭐ [PREMIUM]</option>
+                <option value="Germa 66 [PREMIUM]" data-premium="true">Germa 66 ⭐ [PREMIUM]</option>
+                <option value="Gigantes Ancestrais [PREMIUM]" data-premium="true">Gigantes Ancestrais ⭐ [PREMIUM]</option>
+                <option value="Lunarianos [PREMIUM]" data-premium="true">Lunarianos ⭐ [PREMIUM]</option>
+                <option value="Apóstolos [PREMIUM]" data-premium="true">Apóstolos ⭐ [PREMIUM]</option>
+                <option value="Nosferatu's [PREMIUM]" data-premium="true">Nosferatu's ⭐ [PREMIUM]</option>
+                <option value="Shinigami's [PREMIUM]" data-premium="true">Shinigami's ⭐ [PREMIUM]</option>
+                <option value="Deuses Antigos [PREMIUM]" data-premium="true">Deuses Antigos ⭐ [PREMIUM]</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="char-linhagem">Linhagem *</label>
+              <input type="text" id="char-linhagem" placeholder="Ex: Família D. / Nobreza" required />
+            </div>
+
+            <div class="field">
+              <label for="char-haki">Haki *</label>
+              <select id="char-haki" required>
+                <option value="">Selecione o Haki inicial...</option>
+                <option value="Nenhum">Nenhum</option>
+                <option value="Kenbunshoku (Observação)">Kenbunshoku (Observação)</option>
+                <option value="Busoshoku (Armamento)">Busoshoku (Armamento)</option>
+                <option value="Haoshoku (Conquistador)">Haoshoku (Conquistador)</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- CAMPOS BLOQUEADOS ("EM BREVE") -->
+        <fieldset class="form-group-section" style="margin-top:16px; opacity: 0.75;">
+          <legend>Classificação & Combate (Em Breve)</legend>
+          <div class="form-grid">
+            <div class="field">
+              <label>Classe <span class="badge-soon">Em breve</span></label>
+              <input type="text" disabled placeholder="Bloqueado" />
+            </div>
+            <div class="field">
+              <label>Estilo de Luta <span class="badge-soon">Em breve</span></label>
+              <input type="text" disabled placeholder="Bloqueado" />
+            </div>
+            <div class="field">
+              <label>Afiliação <span class="badge-soon">Em breve</span></label>
+              <input type="text" disabled placeholder="Bloqueado" />
+            </div>
+            <div class="field">
+              <label>Patente <span class="badge-soon">Em breve</span></label>
+              <input type="text" disabled placeholder="Bloqueado" />
+            </div>
+            <div class="field style-full">
+              <label>Akuma no Mi <span class="badge-soon">Em breve</span></label>
+              <input type="text" disabled placeholder="Bloqueado" />
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- AÇÕES DO FORMULÁRIO -->
+        <div class="editor-actions" style="margin-top:20px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+          <button id="copy-ficha-btn" class="btn-primary" type="button" disabled>
+            📋 Copiar Ficha
+          </button>
+          <span id="copy-status" style="font-size:12px; color:var(--teal, #52d9c9);"></span>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

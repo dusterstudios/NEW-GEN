@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEW GEN RPG</title>
+<meta name="description" content="Wiki oficial do RPG do Alan: atributos, raças, classes, estilos de luta e Akuma no Mi da Grand Line.">
+
+<link rel="icon" type="image/png" href="https://uploads.onecompiler.io/44f63fbub/44tg6w63q/___1_-removebg-preview.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ================= LANDING ================= -->
+<div class="landing" id="landing">
+  <div class="landing-bg"></div>
+  <div class="landing-grain"></div>
+  <div class="landing-stars" id="landingStars"></div>
+
+  <div class="landing-content">
+    <div class="landing-mark" aria-hidden="true">
+      <svg viewBox="0 0 100 100" class="compass-mini">
+        <circle cx="50" cy="50" r="46" class="c-ring"/>
+        <circle cx="50" cy="50" r="38" class="c-ring c-ring-soft"/>
+        <path d="M50 8 L56 50 L50 92 L44 50 Z" class="c-needle-n"/>
+        <path d="M8 50 L50 44 L92 50 L50 56 Z" class="c-needle-e"/>
+        <circle cx="50" cy="50" r="4" class="c-hub"/>
+      </svg>
+    </div>
+
+    <span class="landing-eyebrow">Bem vindo ao...</span>
+    <h1 class="landing-title">NEW&nbsp;GEN</h1>
+    <p class="landing-sub">Um oceano sem limites, onde liberdade, perigo e ambição caminham lado a lado. Navegue pela Grand Line, domine Haki e Frutas do Diabo, faça alianças, enfrente inimigos e escreva sua própria lenda, seja lá o que for. Aqui, cada escolha ecoa pelos mares, <b>a jornada começa agora.</b></p>
+
+    <button id="enterWikiBtn" class="btn-enter">
+      <span>Começar a aventura</span>
+      <svg viewBox="0 0 24 24" class="btn-enter-icon"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </button>
+
+    <div class="landing-coords">21°06'S · GRAND LINE · LOG №01</div>
+  </div>
+
+  <div class="landing-fade"></div>
+</div>
+
+<!-- ================= APP SHELL ================= -->
+<div id="app">
+
+  <button class="drawer-toggle" id="drawerToggle" aria-label="Abrir menu" aria-expanded="false">
+    <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+  </button>
+
+  <aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-head">
+      <svg viewBox="0 0 100 100" class="compass" id="navCompass" aria-hidden="true">
+        <circle cx="50" cy="50" r="46" class="c-ring"/>
+        <circle cx="50" cy="50" r="38" class="c-ring c-ring-soft"/>
+        <text x="50" y="12" class="c-label">N</text>
+        <text x="50" y="93" class="c-label">S</text>
+        <text x="9" y="53" class="c-label">O</text>
+        <text x="91" y="53" class="c-label">L</text>
+        <g id="compassNeedle" class="compass-needle">
+          <path d="M50 14 L55 50 L50 86 L45 50 Z" class="c-needle-n"/>
+        </g>
+        <circle cx="50" cy="50" r="3.5" class="c-hub"/>
+      </svg>
+      <div class="sidebar-titles">
+        <h2>NEW GEN</h2>
+        <span>Registro de personagem</span>
+      </div>
+    </div>
+
+    <nav id="mainNav">
+
+      <span class="nav-group-label">Navegação</span>
+      <a data-section="home" class="nav-active">
+        <svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7M6 10v9h12v-9"/></svg>
+        <span>Introdução</span>
+      </a>
+
+      <a data-section="personagem">
+        <svg viewBox="0 0 24 24"><path d="M6 3v18M6 4h11l-3 3.5L17 11H6"/></svg>
+        <span>Personagem</span>
+      </a>
+
+      <a data-section="sistemas">
+        <svg viewBox="0 0 24 24"><path d="M12 3c0 .6.4 1 1 1h4c.6 0 1-.4 1-1V1c0-.6-.4-1-1-1h-4c-.6 0-1 .4-1 1v2zm0 7c0 .6.4 1 1 1h4c.6 0 1-.4 1-1v-2c0-.6-.4-1-1-1h-4c-.6 0-1 .4-1 1v2zm0 7c0 .6.4 1 1 1h4c.6 0 1-.4 1-1v-2c0-.6-.4-1-1-1h-4c-.6 0-1 .4-1 1v2zM3 8c0 .6.4 1 1 1h4c.6 0 1-.4 1-1V6c0-.6-.4-1-1-1H4c-.6 0-1 .4-1 1v2zm0 7c0 .6.4 1 1 1h4c.6 0 1-.4 1-1v-2c0-.6-.4-1-1-1H4c-.6 0-1 .4-1 1v2z"/></svg>
+        <span>Sistemas</span>
+      </a>
+
+      <a data-section="ficha">
+        <svg viewBox="0 0 24 24"><path d="M3 7h18M7 7v14h10V7"/></svg>
+        <span>Ficha</span>
+      </a>
+
+      <a data-section="loja">
+        <svg viewBox="0 0 24 24"><path d="M4 8l1.5-4h13L20 8M4 8h16v11H4zM9 8v3a3 3 0 006 0V8"/></svg>
+        <span>Loja</span>
+      </a>
+
+      <a data-section="creditos">
+        <svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20M6 6l12 12M18 6L6 18"/></svg>
+        <span>Créditos</span>
+      </a>
+
+      <a href="admin.html" id="navAdminLink" hidden>
+        <svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6l7-3z"/></svg>
+        <span>Administração</span>
+      </a>
+
+    </nav>
+
+    <div class="sidebar-foot">
+      <div id="accountArea" style="display:flex;gap:8px;align-items:center;justify-content:space-between;">
+        <div style="font-family:var(--font-mono);font-size:12px;color:var(--fog)" id="accountLabel">Convidado</div>
+        <div>
+          <button id="loginBtn" style="padding:6px 10px;border-radius:8px;background:rgba(155,107,240,.12);border:1px solid rgba(155,107,240,.18);color:var(--ivory);">Entrar / Criar</button>
+          <button id="logoutBtn" style="padding:6px 10px;border-radius:8px;background:transparent;border:1px solid rgba(227,189,99,.12);color:var(--lavender);display:none;">Sair</button>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;">
+        <span>NEW GEN © 2026</span>
+      </div>
+    </div>
+  </aside>
+
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+
+  <!-- ================= CONTEÚDO ================= -->
+  <main class="content">
+
+    <!-- HOME -->
+    <section id="home" class="section active" data-page="home">
+      <div class="home-hero">
+        <span class="page-eyebrow">Log de Bordo - Capítulo 01</span>
+        <h1>Bem-vindo à Grand Line.</h1>
+        <p>Este é o registro completo das regras da <b>NEW GEN</b>. Escolha um capítulo ao lado — ou nos cartões abaixo — para começar a traçar sua rota rumo ao One Piece.</p>
+      </div>
+
+      <div class="lore-block">
+        <span class="page-eyebrow">Crônicas da Grand Line</span>
+        <h3>A Era da Nova Geração</h3>
+        <p class="section-intro" style="margin-bottom:18px;">
+          A Grande Era da Pirataria consumiu reis, lendas e impérios inteiros — e quando a poeira finalmente baixou, o mundo não voltou a ser o mesmo. O Governo Mundial se reergueu sobre ruínas próprias, novas potências emergiram das sombras que antes se escondiam atrás dos grandes nomes, e a Grand Line, mais viva do que nunca, voltou a chamar por aventureiros dispostos a escrever seus próprios capítulos.
+        </p>
+        <p class="section-intro">
+          Bem-vindo à <b>Nova Geração.</b> Aqui, raças esquecidas ressurgem, linhagens celestiais e amaldiçoadas caminham entre os mortais, e o Haki desperta em quem tem determinação o suficiente para reivindicá-lo. Não há mais um único Rei dos Piratas para se temer — há um mar inteiro de possibilidades, e cada personagem criado neste registro é uma nova página em branco à espera de ser preenchida.
+        </p>
+        <div class="lore-quote">
+          <p>"Se o futuro insistir em ruir, que desabe. Nós o reconstruiremos com as próprias mãos."</p>
+          <span>— JJ o farmador de aura</span>
+        </div>
+      </div>
+
+      <div class="home-strip">
+        <div class="home-strip-item">
+          <span class="hs-num">04</span>
+          <span class="hs-label">Atributos primários</span>
+        </div>
+        <div class="home-strip-item">
+          <span class="hs-num">11</span>
+          <span class="hs-label">Capítulos no registro</span>
+        </div>
+        <div class="home-strip-item">
+          <span class="hs-num">∞</span>
+          <span class="hs-label">Rotas possíveis</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Placeholder para outros arquivos carregados dinamicamente -->
+    <div id="pages-container"></div>
+
+  </main>
+</div>
+
+<!-- LOGIN MODAL -->
+<div id="loginModal" style="display:none;position:fixed;inset:0;z-index:200;align-items:center;justify-content:center;">
+  <div style="background:var(--ink-alt);padding:28px;border-radius:16px;border:1px solid var(--line);max-width:420px;margin:24px;box-shadow:0 20px 60px rgba(0,0,0,.6);">
+    <h3 style="margin-top:0;">Entrar no New Gen</h3>
+    <p style="margin:0 0 14px;color:var(--lavender);line-height:1.7;font-size:14px;">
+      Acesse sua conta para salvar personagens, sincronizar sua ficha e utilizar os recursos online.
+      Caso escolha entrar com Google, sua autenticação será realizada pelo Google. O New Gen nunca recebe nem armazena sua senha.
+    </p>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <input id="authUser" placeholder="Nome de usuário" style="padding:10px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--ivory);" />
+      <input id="authEmail" placeholder="E-mail (opcional)" style="padding:10px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--ivory);" />
+      <input id="authPassword" type="password" placeholder="Senha (mínimo 6 caracteres)" style="padding:10px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--ivory);" />
+      <div style="display:flex;gap:8px;">
+        <button id="createAccountBtn" style="flex:1;padding:10px;border-radius:8px;background:linear-gradient(135deg,var(--violet),var(--violet-deep));color:var(--ivory);">Criar conta</button>
+        <button id="doLoginBtn" style="flex:1;padding:10px;border-radius:8px;border:1px solid var(--line);">Entrar com conta local</button>
+      </div>
+      <button id="googleLoginBtn" style="width:100%;padding:10px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--ivory);">Continuar com Google</button>
+      <div style="text-align:right;"><button id="closeLoginModal" style="padding:6px 10px;border-radius:8px;background:transparent;border:1px solid var(--line);">Fechar</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- TOASTS -->
+<div id="toastContainer" style="position:fixed;right:18px;bottom:18px;z-index:300;display:flex;flex-direction:column;gap:10px;pointer-events:none;"></div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
