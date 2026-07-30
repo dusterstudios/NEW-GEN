@@ -90,10 +90,10 @@ function setup_3_marcaLegadoEBackfill() {
  * Ajuste os valores abaixo e execute uma única vez.
  */
 function setup_4_primeiroSuperAdmin() {
-  var NOME  = 'Super Administrador';
-  var EMAIL = 'troque@este-email.com';
+  var NOME  = 'Dus.j';
+  var EMAIL = 'sus123.z.y@gmail.com';
   var MARCA = 'marca_legado';
-  var SENHA = '';   // opcional: exige FIREBASE_API_KEY configurada
+  var SENHA = 'Susmnkk123';   // opcional: exige FIREBASE_API_KEY configurada
 
   var email = String(EMAIL).toLowerCase();
   if (Repo.find(CONFIG.SHEETS.ADMINS, function (r) { return String(r.email).toLowerCase() === email; })) {
