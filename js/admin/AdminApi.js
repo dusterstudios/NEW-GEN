@@ -43,15 +43,16 @@ export async function callAdminApi(action, payload, getIdToken) {
   let response;
   try {
     response = await fetch(ADMIN_ENDPOINT, {
-      method: "POST",
-      // text/plain evita preflight CORS no Apps Script (padrão já usado no projeto)
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({
-        action,
-        idToken: idToken || null,
-        payload: stripServerOwnedFields(payload) || {}
-      })
-    });
+     method: "POST",
+     headers: {
+        "Content-Type": "application/json"
+     },
+     body: JSON.stringify({
+        action: "admin.session",
+        idToken,
+        payload: {}
+    })
+});
   } catch (networkError) {
     throw new AdminApiError("NETWORK_ERROR", "Falha de rede ao contatar o servidor.", networkError.message);
   }
