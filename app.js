@@ -1055,7 +1055,7 @@ function generateAndCopyTemplate() {
   }
 
   async function sendToSheets(action, payload) {
-    const endpoint = "https://script.google.com/macros/s/AKfycbxB8s3iCeaH2wmk4dgh7dDjYuMvHGwKTjSziDiJ6-vaJT42Z6A-cGsw4RvDKXDgi3PW/exec";
+    const endpoint = "https://script.google.com/macros/s/AKfycbwxzNGglTQb9BX4uzhLOe-9KrcJEW-FerrHT-LCpbDqF4rFJyMvciflinwirTHAJi7FxA/exec";
     const resposta = await fetch(endpoint, {
       method: "POST",
       headers: {
