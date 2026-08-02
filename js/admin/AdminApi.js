@@ -1,14 +1,10 @@
 /* ===========================================================
-   AdminApi — cliente ÚNICO do Google Apps Script (camada admin)
-   -----------------------------------------------------------
-   Regras:
-   - Toda chamada envia o idToken do Firebase. NUNCA envia marca_id.
-   - A marca é resolvida no servidor a partir do uid autenticado.
-   - Erros são normalizados em { code, message }.
+   AdminApi — REFATORADO para código simples
+   Sem JWT, sem OAuth, apenas código no payload
    =========================================================== */
 
 export const ADMIN_ENDPOINT =
-  "https://script.google.com/macros/s/AKfycbwxzNGglTQb9BX4uzhLOe-9KrcJEW-FerrHT-LCpbDqF4rFJyMvciflinwirTHAJi7FxA/exec";
+  "https://script.google.com/macros/d/AKfycbx6KLc-dMs82YtBnXfjm0zFPAfOlp6GfWyRX0Fs6NxHqbkDcZWXjn-mV_JP5oMmGIiwXw/usercontent";
 
 export class AdminApiError extends Error {
   constructor(code, message, details) {
@@ -19,8 +15,10 @@ export class AdminApiError extends Error {
   }
 }
 
-/** Campos que o cliente NUNCA pode enviar: o servidor os define. */
-const FORBIDDEN_CLIENT_FIELDS = ["marca_id", "marcaId", "role", "admin_id", "adminId"];
+/**
+ * Campos que o cliente NUNCA pode enviar: o servidor os define
+ */
+const FORBIDDEN_CLIENT_FIELDS = ["admin_id", "marca_id", "role"];
 
 function stripServerOwnedFields(payload) {
   if (!payload || typeof payload !== "object" || Array.isArray(payload)) return payload;
@@ -33,28 +31,34 @@ function stripServerOwnedFields(payload) {
 }
 
 /**
- * @param {string} action  ex: "admin.session", "personagem.listar"
- * @param {object} payload dados da operação (sem marca_id)
- * @param {() => Promise<string|null>} getIdToken função que devolve o idToken atual
+ * Chama a API do Apps Script
+ * @param {string} action  ex: "admin.login", "personagem.listar"
+ * @param {object} payload dados da operação
+ * @param {() => Promise<string|null>} getCodeProvider função que devolve o código atual
  */
-export async function callAdminApi(action, payload, getIdToken) {
-  const idToken = getIdToken ? await getIdToken() : null;
+export async function callAdminApi(action, payload, getCodeProvider) {
+  let codigo = null;
+  if (getCodeProvider) {
+    codigo = await getCodeProvider();
+  }
 
   let response;
   try {
     response = await fetch(ADMIN_ENDPOINT, {
-     method: "POST",
-     headers: {
-        "Content-Type": "application/json"
-     },
-     body: JSON.stringify({
-        action: "admin.session",
-        idToken,
-        payload: {}
-    })
-});
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({
+        action,
+        codigo: codigo || null,  // Envia código em vez de idToken
+        payload: stripServerOwnedFields(payload) || {}
+      })
+    });
   } catch (networkError) {
-    throw new AdminApiError("NETWORK_ERROR", "Falha de rede ao contatar o servidor.", networkError.message);
+    throw new AdminApiError(
+      "NETWORK_ERROR",
+      "Falha de rede ao contatar o servidor.",
+      networkError.message
+    );
   }
 
   let body;
@@ -62,12 +66,20 @@ export async function callAdminApi(action, payload, getIdToken) {
   try {
     body = JSON.parse(text);
   } catch {
-    throw new AdminApiError("BAD_RESPONSE", "Resposta inválida do servidor.", text.slice(0, 300));
+    throw new AdminApiError(
+      "BAD_RESPONSE",
+      "Resposta inválida do servidor.",
+      text.slice(0, 300)
+    );
   }
 
   if (!body || body.ok !== true) {
     const err = (body && body.error) || {};
-    throw new AdminApiError(err.code || "SERVER_ERROR", err.message || "Operação recusada.", err.details);
+    throw new AdminApiError(
+      err.code || "SERVER_ERROR",
+      err.message || "Operação recusada.",
+      err.details
+    );
   }
 
   return body.data;

@@ -1,11 +1,11 @@
 /* ===========================================================
    AdminApp — bootstrap e roteamento do painel administrativo
+   REFATORADO: Sem Firebase, apenas código de segurança
    -----------------------------------------------------------
    Fluxo:
-     1. Firebase restaura (ou não) o usuário
-     2. AdminSession resolve a sessão NO SERVIDOR
-     3. Shell é montado com a marca já resolvida
-     4. Rotas por hash, filtradas por permissão
+     1. AdminSession valida código
+     2. Shell é montado com a marca já resolvida
+     3. Rotas por hash, filtradas por permissão
    =========================================================== */
 
 import { AdminSession } from "./AdminSession.js";
@@ -41,8 +41,7 @@ async function renderLogin(mensagem) {
     mostrar("");
     try {
       await AdminSession.login(
-        root.querySelector("#admin-email").value,
-        root.querySelector("#admin-senha").value
+        root.querySelector("#admin-codigo").value
       );
       location.hash = `#${ROTA_PADRAO}`;
       renderShell();
@@ -52,32 +51,15 @@ async function renderLogin(mensagem) {
       btn.disabled = false;
     }
   });
-
-  root.querySelector("#admin-login-google").addEventListener("click", async () => {
-    mostrar("");
-    try {
-      const [{ GoogleAuthProvider, signInWithPopup }, { auth }] = await Promise.all([
-        import("https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js"),
-        import("../../firebase.js")
-      ]);
-      await signInWithPopup(auth, new GoogleAuthProvider());
-      await AdminSession.refresh();
-      location.hash = `#${ROTA_PADRAO}`;
-      renderShell();
-    } catch (e) {
-      mostrar(traduzErro(e));
-    }
-  });
 }
 
 function traduzErro(e) {
   const code = e?.code || "";
-  if (code.includes("wrong-password") || code.includes("invalid-credential")) return "E-mail ou senha inválidos.";
-  if (code.includes("user-not-found")) return "Conta não encontrada.";
-  if (code.includes("too-many-requests")) return "Muitas tentativas. Aguarde alguns minutos.";
-  if (code === "NOT_ADMIN") return "Esta conta não possui acesso administrativo.";
+  if (code === "INVALID_CODE") return "Código inválido.";
   if (code === "ADMIN_INACTIVE") return "Sua conta administrativa está desativada.";
   if (code === "BRAND_INACTIVE") return "A marca vinculada à sua conta está inativa.";
+  if (code === "BRAND_NOT_FOUND") return "Marca não encontrada.";
+  if (code === "NETWORK_ERROR") return "Erro de rede. Verifique sua conexão.";
   if (e instanceof AdminApiError) return e.message;
   return e?.message || "Não foi possível entrar.";
 }
@@ -103,7 +85,7 @@ async function renderShell() {
   }
 
   root.querySelector('[data-bind="marca-nome"]').textContent = sessao.marca?.nome || "—";
-  root.querySelector('[data-bind="admin-nome"]').textContent = sessao.admin?.nome || sessao.admin?.email || "";
+  root.querySelector('[data-bind="admin-nome"]').textContent = sessao.admin?.nome || "";
   root.querySelector('[data-bind="admin-role"]').textContent = sessao.admin?.role || "";
 
   renderNav();
@@ -167,14 +149,17 @@ AdminSession.onChange(sessao => {
 });
 
 let primeiroEstado = true;
-AdminSession.observeFirebase();
 
-// Resolve o estado inicial sem depender apenas do observer do Firebase.
+// Bootstrap: tenta restaurar sessão do cache
 (async function boot() {
   try {
-    await AdminSession.refresh();
     primeiroEstado = false;
-    await renderShell();
+    const sessao = AdminSession.get();
+    if (sessao) {
+      await renderShell();
+    } else {
+      await renderLogin("");
+    }
   } catch (e) {
     primeiroEstado = false;
     const code = e?.code;

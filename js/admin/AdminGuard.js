@@ -1,5 +1,6 @@
 /* ===========================================================
    AdminGuard — proteção das telas administrativas
+   REFATORADO: Sem Firebase, apenas valida sessão local
    -----------------------------------------------------------
    Redireciona quem não tem sessão válida. É apenas UX:
    a barreira real está no Guard.gs do Apps Script.
@@ -17,14 +18,6 @@ export const AdminGuard = {
     const { redirectTo = "#login", requirePermissions = [] } = opts;
 
     let session = AdminSession.get();
-    if (!session) {
-      try {
-        session = await AdminSession.refresh();
-      } catch {
-        session = null;
-      }
-    }
-
     if (!session) {
       if (redirectTo) location.hash = redirectTo;
       return { allowed: false, reason: "NOT_AUTHENTICATED", session: null };
