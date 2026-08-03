@@ -4,7 +4,7 @@
    =========================================================== */
 
 export const ADMIN_ENDPOINT =
-  "https://script.google.com/macros/s/AKfycbzXzRGZr2RVB4pwWIgYMaUDZW25EQY_7Lxx-PvySaXNFXtyO0_B6wvmmFeS-weuqsBLlg/exec";
+  "https://script.google.com/macros/s/AKfycbzHN69Jwqk1QVdmt1N5g3P7A-kR9QiwAltpVjp81MQ-bEH9cU7Qj6ymp7t4CM6pxf93UQ/exec";
 
 export class AdminApiError extends Error {
   constructor(code, message, details) {
