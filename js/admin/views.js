@@ -134,18 +134,23 @@ async function administradores(root) {
     try {
       const itens = await AdminRepository.list();
       lista.innerHTML = tabela(
-        ["Nome", "E-mail", "Cargo", "Status", "Último acesso", ""],
+        ["Nome", "Código", "Cargo", "Status", "Último acesso", ""],
         itens.map(a => [
           esc(a.nome),
-          esc(a.email),
+          esc(a.codigo || "—"),
           pill(a.role),
           pill(a.status, a.status === "ativo"),
           esc(a.ultimo_acesso || "—"),
-          perms.can("admin.desativar") && a.admin_id !== eu.admin_id
-            ? `<button class="btn btn-ghost" data-toggle="${esc(a.admin_id)}" data-status="${a.status === "ativo" ? "inativo" : "ativo"}">
-                 ${a.status === "ativo" ? "Desativar" : "Reativar"}
-               </button>`
-            : ""
+          [
+            perms.can("admin.desativar") && a.admin_id !== eu.admin_id
+              ? `<button class="btn btn-ghost" data-toggle="${esc(a.admin_id)}" data-status="${a.status === "ativo" ? "inativo" : "ativo"}">
+                   ${a.status === "ativo" ? "Desativar" : "Reativar"}
+                 </button>`
+              : "",
+            perms.can("admin.editar")
+              ? `<button class="btn btn-ghost" data-regenerate="${esc(a.admin_id)}">Regenerar código</button>`
+              : ""
+          ].join('')
         ]),
         "Nenhum administrador nesta marca."
       );
@@ -156,28 +161,35 @@ async function administradores(root) {
 
   lista.addEventListener("click", async ev => {
     const id = ev.target.getAttribute?.("data-toggle");
-    if (!id) return;
-    try {
-      await AdminRepository.setStatus(id, ev.target.getAttribute("data-status"));
-      carregar();
-    } catch (e) { erro(boxErro, e.message); }
+    if (id) {
+      try {
+        await AdminRepository.setStatus(id, ev.target.getAttribute("data-status"));
+        carregar();
+      } catch (e) { erro(boxErro, e.message); }
+      return;
+    }
+
+    const regenId = ev.target.getAttribute?.("data-regenerate");
+    if (regenId) {
+      try {
+        await AdminRepository.generateCode(regenId);
+        carregar();
+      } catch (e) { erro(boxErro, e.message); }
+      return;
+    }
   });
 
   root.querySelector("#admin-novo-form")?.addEventListener("submit", async ev => {
     ev.preventDefault();
     erro(boxErro, "");
     try {
-      const res = await AdminRepository.create({
+      await AdminRepository.create({
         nome: root.querySelector("#na-nome").value,
-        email: root.querySelector("#na-email").value,
-        senha: root.querySelector("#na-senha").value || undefined,
+        codigo: root.querySelector("#na-codigo").value,
         role: selectRole.value,
         observacoes: root.querySelector("#na-obs").value
       });
       ev.target.reset();
-      if (res && res.vinculo_pendente === true) {
-        erro(boxErro, "Conta criada. O acesso será vinculado no primeiro login com este e-mail.");
-      }
       carregar();
     } catch (e) { erro(boxErro, e.message); }
   });

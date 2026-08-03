@@ -22,14 +22,19 @@ export const AdminRepository = {
   },
 
   /** Cria um admin. A marca é herdada do criador (ou informada só por super_admin no servidor). */
-  async create({ nome, email, senha, role, observacoes }) {
-    const data = await adminCall("admin.criar", { nome, email, senha, role_solicitada: role, observacoes });
+  async create({ nome, codigo, role, observacoes }) {
+    const data = await adminCall("admin.criar", { nome, codigo, role_solicitada: role, observacoes });
     return data.item;
   },
 
   async update(adminId, changes) {
     const data = await adminCall("admin.atualizar", { admin_alvo_id: adminId, changes });
     return data.item;
+  },
+
+  async generateCode(adminId) {
+    const data = await adminCall("admin.gerar_codigo", { admin_alvo_id: adminId });
+    return data;
   },
 
   async setStatus(adminId, status) {

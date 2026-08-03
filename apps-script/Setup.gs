@@ -91,23 +91,19 @@ function setup_3_marcaLegadoEBackfill() {
  */
 function setup_4_primeiroSuperAdmin() {
   var NOME  = 'Dus.j';
-  var EMAIL = 'sus123.z.y@gmail.com';
   var MARCA = 'marca_legado';
-  var SENHA = 'Susmnkk123';   // opcional: exige FIREBASE_API_KEY configurada
+  var CODIGO = 'ADM0001';
 
-  var email = String(EMAIL).toLowerCase();
-  if (Repo.find(CONFIG.SHEETS.ADMINS, function (r) { return String(r.email).toLowerCase() === email; })) {
-    Logger.log('Já existe admin com este e-mail.');
+  var codigo = String(CODIGO).trim().toUpperCase();
+  if (Repo.find(CONFIG.SHEETS.ADMINS, function (r) { return String(r.codigo).trim().toUpperCase() === codigo; })) {
+    Logger.log('Já existe admin com este código.');
     return;
   }
 
-  var uid = SENHA ? (FirebaseAdmin.criarUsuario(email, SENHA) || '') : '';
-
   Repo.insert(CONFIG.SHEETS.ADMINS, {
     admin_id: Repo.uuid(),
-    firebase_uid: uid,
+    codigo: codigo,
     nome: NOME,
-    email: email,
     marca_id: MARCA,
     role: 'super_admin',
     status: CONFIG.STATUS.ATIVO,
@@ -118,7 +114,7 @@ function setup_4_primeiroSuperAdmin() {
     meta_json: '{}'
   });
 
-  Logger.log('Super admin criado. Se o uid ficou vazio, ele será vinculado no primeiro login por e-mail.');
+  Logger.log('Super admin criado com código administrativo: ' + codigo);
 }
 
 /** Executa tudo na ordem correta (exceto o super admin). */

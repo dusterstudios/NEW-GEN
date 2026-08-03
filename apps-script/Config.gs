@@ -31,7 +31,7 @@ var CONFIG = {
 };
 
 var HEADERS = {
-  Admins: ['admin_id','firebase_uid','nome','email','marca_id','role','status',
+  Admins: ['admin_id','codigo','firebase_uid','nome','email','marca_id','role','status',
            'criado_em','ultimo_acesso','criado_por','observacoes','meta_json'],
   Marcas: ['marca_id','nome','status','criado_em','meta_json'],
   Permissoes: ['role','permissao','permitido'],

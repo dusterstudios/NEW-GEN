@@ -4,7 +4,7 @@
    =========================================================== */
 
 export const ADMIN_ENDPOINT =
-  "https://script.google.com/macros/d/AKfycbxrWJTcU_C-H8mI1lj_va3oKB1UTrAB9Tr5Y47ya5DI/usercontent";
+  "https://script.google.com/macros/s/AKfycbzXzRGZr2RVB4pwWIgYMaUDZW25EQY_7Lxx-PvySaXNFXtyO0_B6wvmmFeS-weuqsBLlg/exec";
 
 export class AdminApiError extends Error {
   constructor(code, message, details) {
@@ -40,6 +40,8 @@ export async function callAdminApi(action, payload, getCodeProvider) {
   let codigo = null;
   if (getCodeProvider) {
     codigo = await getCodeProvider();
+  } else if (payload && payload.codigo) {
+    codigo = payload.codigo;
   }
 
   let response;

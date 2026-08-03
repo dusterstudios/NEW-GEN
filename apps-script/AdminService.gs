@@ -16,10 +16,17 @@ var AdminService = {
 
   _view: function (a) {
     return {
-      admin_id: a.admin_id, nome: a.nome, email: a.email, marca_id: a.marca_id,
-      role: a.role, status: a.status, criado_em: a.criado_em,
-      ultimo_acesso: a.ultimo_acesso, criado_por: a.criado_por,
-      observacoes: a.observacoes, meta: parseMeta(a.meta_json)
+      admin_id: a.admin_id,
+      codigo: a.codigo,
+      nome: a.nome,
+      marca_id: a.marca_id,
+      role: a.role,
+      status: a.status,
+      criado_em: a.criado_em,
+      ultimo_acesso: a.ultimo_acesso,
+      criado_por: a.criado_por,
+      observacoes: a.observacoes,
+      meta: parseMeta(a.meta_json)
     };
   },
 
@@ -39,30 +46,24 @@ var AdminService = {
   criar: function (ctx, p) {
     Guard.assertPermission(ctx, 'admin.criar');
 
-    var nome  = Guard.requireString(p.nome, 'nome', 120);
-    var email = Guard.requireEmail(p.email);
+    var nome = Guard.requireString(p.nome, 'nome', 120);
+    var codigo = this._normalizeCode(p.codigo || p.codigo_inicial || '');
+    if (!codigo) fail('VALIDATION', 'Código administrativo obrigatório.');
 
     var jaExiste = Repo.find(CONFIG.SHEETS.ADMINS, function (r) {
-      return String(r.email).toLowerCase() === email;
-    });
-    if (jaExiste) fail('DUPLICATE', 'Já existe um administrador com este e-mail.');
+      return this._normalizeCode(r.codigo) === codigo;
+    }.bind(this));
+    if (jaExiste) fail('DUPLICATE', 'Já existe um administrador com este código.');
 
-    // Cargo: só é possível conceder cargos que existam na aba Permissoes,
-    // e nunca um cargo acima do próprio (a menos que haja admin.definir_role).
     var role = Guard.requireEnum(p.role_solicitada, 'role', RoleRegistry.listar());
     if (role !== ctx.role) Guard.assertPermission(ctx, 'admin.definir_role');
 
-    // A MARCA NÃO VEM DO CLIENTE: é herdada de quem está criando.
     var marcaId = ctx.marca.marca_id;
-
-    var uid = '';
-    if (p.senha) uid = FirebaseAdmin.criarUsuario(email, String(p.senha)) || '';
 
     var registro = {
       admin_id: Repo.uuid(),
-      firebase_uid: uid,
+      codigo: codigo,
       nome: nome,
-      email: email,
       marca_id: marcaId,
       role: role,
       status: CONFIG.STATUS.ATIVO,
@@ -74,8 +75,8 @@ var AdminService = {
     };
 
     Repo.insert(CONFIG.SHEETS.ADMINS, registro);
-    Audit.log(ctx, 'admin.criar', registro.admin_id, 'OK', email + ' / ' + role);
-    return { item: this._view(registro), vinculo_pendente: !uid };
+    Audit.log(ctx, 'admin.criar', registro.admin_id, 'OK', 'código=' + codigo + ' / ' + role);
+    return { item: this._view(registro) };
   },
 
   atualizar: function (ctx, p) {
@@ -83,12 +84,20 @@ var AdminService = {
     var alvo = Repo.findBy(CONFIG.SHEETS.ADMINS, 'admin_id', p.admin_alvo_id);
     Guard.assertScope(ctx, alvo, 'admin.atualizar');
 
-    // marca_id, admin_id, firebase_uid e criado_em jamais entram aqui.
-    var changes = Guard.sanitize(p.changes || {}, ['nome', 'observacoes']);
+    var changes = Guard.sanitize(p.changes || {}, ['nome', 'observacoes', 'codigo']);
 
     if (p.changes && p.changes.role !== undefined) {
       Guard.assertPermission(ctx, 'admin.definir_role');
       changes.role = Guard.requireEnum(p.changes.role, 'role', RoleRegistry.listar());
+    }
+
+    if (changes.codigo !== undefined) {
+      changes.codigo = this._normalizeCode(changes.codigo);
+      if (!changes.codigo) fail('VALIDATION', 'Código administrativo inválido.');
+      var outro = Repo.find(CONFIG.SHEETS.ADMINS, function (r) {
+        return String(r.admin_id) !== String(alvo.admin_id) && this._normalizeCode(r.codigo) === changes.codigo;
+      }.bind(this));
+      if (outro) fail('DUPLICATE', 'Já existe um administrador com este código.');
     }
 
     if (!Object.keys(changes).length) fail('VALIDATION', 'Nenhum campo alterável informado.');
@@ -111,6 +120,34 @@ var AdminService = {
     Repo.update(CONFIG.SHEETS.ADMINS, alvo._rowIndex, { status: status });
     Audit.log(ctx, 'admin.status', alvo.admin_id, 'OK', status);
     return { item: this._view(Repo.findBy(CONFIG.SHEETS.ADMINS, 'admin_id', alvo.admin_id)) };
+  },
+
+  gerarCodigo: function (ctx, p) {
+    Guard.assertPermission(ctx, 'admin.editar');
+    var alvo = Repo.findBy(CONFIG.SHEETS.ADMINS, 'admin_id', p.admin_alvo_id);
+    Guard.assertScope(ctx, alvo, 'admin.atualizar');
+
+    var novoCodigo = this._generateUniqueCode();
+    Repo.update(CONFIG.SHEETS.ADMINS, alvo._rowIndex, { codigo: novoCodigo });
+    Audit.log(ctx, 'admin.gerar_codigo', alvo.admin_id, 'OK', novoCodigo);
+    return { item: this._view(Repo.findBy(CONFIG.SHEETS.ADMINS, 'admin_id', alvo.admin_id)), codigo: novoCodigo };
+  },
+
+  _normalizeCode: function (codigo) {
+    if (codigo === null || codigo === undefined) return '';
+    return String(codigo).trim().toUpperCase();
+  },
+
+  _generateUniqueCode: function () {
+    var maxAttempts = 10;
+    for (var i = 0; i < maxAttempts; i++) {
+      var candidate = 'ADM' + Math.random().toString(36).substring(2, 8).toUpperCase();
+      var existe = Repo.find(CONFIG.SHEETS.ADMINS, function (r) {
+        return this._normalizeCode(r.codigo) === candidate;
+      }.bind(this));
+      if (!existe) return candidate;
+    }
+    fail('SERVER_ERROR', 'Não foi possível gerar um código administrativo único.');
   }
 };
 

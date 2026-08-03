@@ -4,12 +4,14 @@
  *  =========================================================== */
 
 var ROUTES = {
+  'admin.login':          function (ctx, p) { return AdminService.session(ctx); },
   'admin.session':        function (ctx, p) { return AdminService.session(ctx); },
   'admin.listar':         function (ctx, p) { return AdminService.listar(ctx, p); },
   'admin.obter':          function (ctx, p) { return AdminService.obter(ctx, p); },
   'admin.criar':          function (ctx, p) { return AdminService.criar(ctx, p); },
   'admin.atualizar':      function (ctx, p) { return AdminService.atualizar(ctx, p); },
   'admin.status':         function (ctx, p) { return AdminService.status(ctx, p); },
+  'admin.gerar_codigo':   function (ctx, p) { return AdminService.gerarCodigo(ctx, p); },
 
   'marca.atual':          function (ctx, p) { return BrandService.atual(ctx); },
   'marca.listar':         function (ctx, p) { return BrandService.listar(ctx); },
@@ -45,7 +47,7 @@ function routeRequest(body) {
   var handler = ROUTES[action];
   if (!handler) fail('UNKNOWN_ACTION', 'Ação desconhecida: ' + action);
 
-  // 2) rota administrativa: token obrigatório, contexto resolvido no servidor
-  var ctx = Auth.resolveContext(body.idToken);
+  // 2) rota administrativa: código administrativo obrigatório, contexto resolvido no servidor
+  var ctx = Auth.resolveContext(body.codigo);
   return handler(ctx, body.payload || {});
 }
